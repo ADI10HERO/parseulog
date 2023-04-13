@@ -1,9 +1,9 @@
 import argparse
-from cProfile import label
 import pyulog
 import matplotlib.pyplot as plt
 
 from pprint import pprint
+from utils import get_battery_data_index
 
 
 def parse_ulog_file(filepath, plot=False):
@@ -23,12 +23,13 @@ def parse_ulog_file(filepath, plot=False):
         print("Error opening ULog file: {}".format(str(e)))
         return None
 
-    print(ulog.data_list[4].name)
+    index = get_battery_data_index(ulog.data_list)
+
     data["battery"] = {}
-    data["battery"]["voltage"] = ulog.data_list[4].data["voltage_v"]
-    data["battery"]["current"] = ulog.data_list[4].data["current_a"]
-    data["battery"]["level"] = ulog.data_list[4].data["remaining"] * 100
-    data["battery"]["timestamp"] = ulog.data_list[4].data["timestamp"]
+    data["battery"]["voltage"] = ulog.data_list[index].data["voltage_v"]
+    data["battery"]["current"] = ulog.data_list[index].data["current_a"]
+    data["battery"]["level"] = ulog.data_list[index].data["remaining"] * 100
+    data["battery"]["timestamp"] = ulog.data_list[index].data["timestamp"]
 
     if plot:
         # Generate the plot
